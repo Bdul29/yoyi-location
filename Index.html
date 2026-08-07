@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <base target="_top">
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>YOYI! Location</title>
+
+  <?!= include("CSS"); ?>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <h1>🟨 YOYI! LOCATION</h1>
+
+        <p>Smart Locker & Storage Network</p>
+
+    </div>
+
+    <!-- SEARCH -->
+
+    <div class="search-box">
+
+        <input
+            type="text"
+            id="search"
+            placeholder="Cari lokasi...">
+
+        <button id="btnSearch">🔍</button>
+
+    </div>
+
+    <!-- TOOLBAR -->
+
+    <div class="toolbar">
+
+        <button id="btnFilter">
+
+            ⚙ Filter
+
+        </button>
+
+        <div class="counter">
+
+            <span id="total">0</span> Lokasi
+
+        </div>
+
+    </div>
+
+    <!-- FILTER -->
+
+    <div id="filterModal" class="modal">
+
+        <div class="modal-content">
+
+            <h3>Filter Lokasi</h3>
+
+            <select id="provinsi">
+
+                <option value="">Semua Provinsi</option>
+
+            </select>
+
+            <select id="kota">
+
+                <option value="">Semua Kota</option>
+
+            </select>
+
+            <select id="kecamatan">
+
+                <option value="">Semua Kecamatan</option>
+
+            </select>
+
+            <select id="tipe">
+
+                <option value="">Semua Tipe</option>
+
+            </select>
+
+            <div class="button-group">
+
+                <button id="applyFilter">
+
+                    Terapkan
+
+                </button>
+
+                <button id="resetFilter">
+
+                    Reset
+
+                </button>
+
+                <button id="closeFilter">
+
+                    Tutup
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- LIST -->
+
+    <div class="list-container">
+
+        <div id="loading">
+
+            Mengambil data...
+
+        </div>
+
+        <div id="list"></div>
+
+    </div>
+
+</div>
+
+<?!= include("JS"); ?>
+
+</body>
+
+</html>
