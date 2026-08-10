@@ -1,31 +1,21 @@
 const SPREADSHEET_ID = "1AxSU0mkLd6sUVfPxYwVYlKyuN2Hc8d8q-k00D-UYrLQ";
 const SHEET_NAME = "Sheet1";
 
-function doGet(e) {
 
-  const callback = e.parameter.callback;
+function doGet() {
 
   const data = getLocations();
 
-  const json = JSON.stringify(data);
-
-  if (callback) {
-
-    return ContentService
-      .createTextOutput(callback + "(" + json + ");")
-      .setMimeType(ContentService.MimeType.JAVASCRIPT);
-
-  }
-
   return ContentService
-    .createTextOutput(json)
+    .createTextOutput(JSON.stringify(data))
     .setMimeType(ContentService.MimeType.JSON);
+
 }
 
 
-/****************************************************
- * GET LOCATIONS
- ****************************************************/
+/* ==============================
+   GET LOCATIONS
+============================== */
 
 function getLocations() {
 
@@ -33,7 +23,13 @@ function getLocations() {
     .openById(SPREADSHEET_ID)
     .getSheetByName(SHEET_NAME);
 
-  const values = sheet.getDataRange().getValues();
+  if (!sheet) {
+    return [];
+  }
+
+  const values = sheet
+    .getDataRange()
+    .getValues();
 
   if (values.length <= 1) {
     return [];
@@ -48,7 +44,9 @@ function getLocations() {
     const wkt = String(row[0] || "");
     const name = String(row[1] || "");
 
-    if (!name) return;
+    if (!name) {
+      return;
+    }
 
     let lat = "";
     let lng = "";
@@ -89,4 +87,5 @@ function getLocations() {
   });
 
   return result;
+
 }
