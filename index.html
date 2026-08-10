@@ -1,105 +1,230 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>YOYI! LOCATION</title>
-  <meta name="description" content="YOYI! Location - Smart Locker & Storage Network">
-  <link rel="stylesheet" href="style.css">
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>YOYI! Location</title>
+
+    <link rel="stylesheet" href="style.css">
+
 </head>
+
 <body>
 
-  <main class="app">
+<div class="app">
+
+    <!-- HEADER -->
 
     <header class="header">
-      <div class="brand">
-        <div class="brand-mark">Y</div>
-        <div>
-          <h1>YOYI! LOCATION</h1>
-          <p>Smart Locker &amp; Storage Network</p>
+
+        <div class="brand">
+
+            <div class="logo-box">
+                Y
+            </div>
+
+            <div>
+
+                <div class="brand-title">
+                    YOYI! LOCATION
+                </div>
+
+                <div class="brand-subtitle">
+                    Smart Locker & Storage Network
+                </div>
+
+            </div>
+
         </div>
-      </div>
+
     </header>
 
-    <section class="toolbar">
-      <div class="search-wrap">
-        <span class="search-icon">⌕</span>
-        <input id="searchInput" type="search" placeholder="Cari lokasi..." autocomplete="off">
-        <button id="clearSearch" class="clear-btn" type="button" aria-label="Hapus pencarian">×</button>
-      </div>
 
-      <button id="filterBtn" class="filter-btn" type="button">
-        <span>⚙</span> Filter
-      </button>
+    <!-- SEARCH -->
 
-      <div class="counter"><strong id="totalCount">0</strong> Lokasi</div>
-    </section>
+    <div class="search-area">
 
-    <section class="content">
-      <div class="list-header">
-        <div>
-          <h2>Daftar Lokasi</h2>
-          <p id="resultInfo">Mengambil data...</p>
+        <div class="search-box">
+
+            <span class="search-icon">
+                ⌕
+            </span>
+
+            <input
+                type="text"
+                id="search"
+                placeholder="Cari lokasi...">
+
+            <button
+                id="clearSearch"
+                class="clear-btn">
+
+                ×
+
+            </button>
+
         </div>
-      </div>
 
-      <div id="loading" class="state">Mengambil data lokasi...</div>
-      <div id="error" class="state error" hidden></div>
-      <div id="empty" class="state" hidden>Lokasi tidak ditemukan.</div>
-      <div id="locationList" class="location-list"></div>
-    </section>
-
-  </main>
-
-  <!-- FILTER MODAL -->
-  <div id="filterModal" class="modal" hidden>
-    <div class="modal-backdrop" id="modalBackdrop"></div>
-    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="filterTitle">
-      <div class="modal-head">
-        <div>
-          <h2 id="filterTitle">Filter Lokasi</h2>
-          <p>Pilih kriteria lokasi yang ingin ditampilkan.</p>
-        </div>
-        <button id="closeFilter" class="close-btn" type="button" aria-label="Tutup">×</button>
-      </div>
-
-      <div class="filter-grid">
-        <label>
-          <span>Provinsi</span>
-          <select id="provinsi">
-            <option value="">Semua Provinsi</option>
-          </select>
-        </label>
-
-        <label>
-          <span>Kota</span>
-          <select id="kota">
-            <option value="">Semua Kota</option>
-          </select>
-        </label>
-
-        <label>
-          <span>Kecamatan</span>
-          <select id="kecamatan">
-            <option value="">Semua Kecamatan</option>
-          </select>
-        </label>
-
-        <label>
-          <span>Tipe</span>
-          <select id="tipe">
-            <option value="">Semua Tipe</option>
-          </select>
-        </label>
-      </div>
-
-      <div class="modal-actions">
-        <button id="resetFilter" class="btn-secondary" type="button">Reset</button>
-        <button id="applyFilter" class="btn-primary" type="button">Terapkan Filter</button>
-      </div>
     </div>
-  </div>
 
-  <script src="script.js"></script>
+
+    <!-- TOOLBAR -->
+
+    <div class="toolbar">
+
+        <button
+            id="btnFilter"
+            class="filter-btn">
+
+            ⚙ Filter
+
+        </button>
+
+        <div class="counter">
+
+            <strong id="total">
+                0
+            </strong>
+
+            Lokasi
+
+        </div>
+
+    </div>
+
+
+    <!-- FILTER -->
+
+    <div
+        id="filterModal"
+        class="filter-modal"
+        style="display:none;">
+
+        <div class="filter-box">
+
+            <div class="filter-header">
+
+                <strong>
+                    Filter Lokasi
+                </strong>
+
+                <button id="closeFilter">
+                    ×
+                </button>
+
+            </div>
+
+
+            <select id="provinsi">
+
+                <option value="">
+                    Semua Provinsi
+                </option>
+
+            </select>
+
+
+            <select id="kota">
+
+                <option value="">
+                    Semua Kota
+                </option>
+
+            </select>
+
+
+            <select id="kecamatan">
+
+                <option value="">
+                    Semua Kecamatan
+                </option>
+
+            </select>
+
+
+            <select id="tipe">
+
+                <option value="">
+                    Semua Tipe
+                </option>
+
+            </select>
+
+
+            <div class="filter-actions">
+
+                <button
+                    id="resetFilter"
+                    class="reset-btn">
+
+                    Reset
+
+                </button>
+
+                <button
+                    id="applyFilter"
+                    class="apply-btn">
+
+                    Terapkan
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- LOCATION LIST -->
+
+    <main class="content">
+
+        <div class="list-title">
+
+            <div>
+                Daftar Lokasi
+            </div>
+
+            <div
+                id="loading"
+                class="loading">
+
+                Mengambil data...
+
+            </div>
+
+        </div>
+
+
+        <div
+            id="list"
+            class="location-list">
+        </div>
+
+
+        <div
+            id="empty"
+            class="empty"
+            style="display:none;">
+
+            Lokasi tidak ditemukan.
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<script src="script.js"></script>
+
 </body>
+
 </html>
