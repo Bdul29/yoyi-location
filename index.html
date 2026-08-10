@@ -11,23 +11,24 @@
 
     <title>YOYI! Location</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link
+        rel="stylesheet"
+        href="style.css">
 
 </head>
 
+
 <body>
 
+
 <div class="app">
+
 
     <!-- HEADER -->
 
     <header class="header">
 
         <div class="brand">
-
-            <div class="logo-box">
-        
-            </div>
 
             <div>
 
@@ -53,7 +54,7 @@
         <div class="search-box">
 
             <span class="search-icon">
-                ⌕
+                🔍
             </span>
 
             <input
@@ -86,6 +87,7 @@
 
         </button>
 
+
         <div class="counter">
 
             <strong id="total">
@@ -99,14 +101,15 @@
     </div>
 
 
-    <!-- FILTER -->
+    <!-- FILTER MODAL -->
 
     <div
         id="filterModal"
         class="filter-modal"
-        style="display:none;">
+        hidden>
 
         <div class="filter-box">
+
 
             <div class="filter-header">
 
@@ -114,8 +117,11 @@
                     Filter Lokasi
                 </strong>
 
-                <button id="closeFilter">
+                <button
+                    id="closeFilter">
+
                     ×
+
                 </button>
 
             </div>
@@ -167,6 +173,7 @@
 
                 </button>
 
+
                 <button
                     id="applyFilter"
                     class="apply-btn">
@@ -177,28 +184,29 @@
 
             </div>
 
+
         </div>
 
     </div>
 
 
-    <!-- LOCATION LIST -->
+    <!-- CONTENT -->
 
     <main class="content">
 
+
         <div class="list-title">
 
-            <div>
-                Daftar Lokasi
-            </div>
+            Daftar Lokasi
 
-            <div
-                id="loading"
-                class="loading">
+        </div>
 
-                Mengambil data...
 
-            </div>
+        <div
+            id="loading"
+            class="loading">
+
+            Mengambil data...
 
         </div>
 
@@ -212,18 +220,21 @@
         <div
             id="empty"
             class="empty"
-            style="display:none;">
+            hidden>
 
             Lokasi tidak ditemukan.
 
         </div>
 
+
     </main>
+
 
 </div>
 
 
 <script src="script.js"></script>
+
 
 </body>
 
