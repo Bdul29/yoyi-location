@@ -1,127 +1,114 @@
+/* =====================================================
+   YOYI! LOCATION
+   MAIN STYLE
+===================================================== */
+
 * {
     box-sizing: border-box;
 }
 
+
+/* =====================================================
+   BODY
+===================================================== */
+
+html,
 body {
-
     margin: 0;
-
-    background: #eef5f3;
+    padding: 0;
+    min-height: 100%;
 
     font-family:
         Arial,
         Helvetica,
         sans-serif;
 
+    background: #eef5f3;
     color: #222;
-
 }
 
 
+/* =====================================================
+   APP
+===================================================== */
+
 .app {
-
     width: 100%;
-
     max-width: 430px;
 
     min-height: 100vh;
 
-    margin: auto;
+    margin: 0 auto;
 
     background: #ffffff;
-
 }
 
 
-/* =========================
+/* =====================================================
    HEADER
-========================= */
+===================================================== */
 
 .header {
-
     background: #08a99b;
 
     padding: 16px;
-
 }
 
 
 .brand {
-
     display: flex;
 
     align-items: center;
 
     gap: 12px;
-
 }
 
 
+/*
+   Logo box sengaja dikosongkan.
+   Bisa diisi logo YOYI! nanti.
+*/
+
 .logo-box {
-
-    width: 42px;
-
-    height: 42px;
-
-    background: #ffc629;
-
-    border-radius: 8px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    font-size: 24px;
-
-    font-weight: bold;
-
-    color: #ffffff;
-
+    display: none;
 }
 
 
 .brand-title {
-
     color: #ffffff;
 
     font-size: 20px;
 
     font-weight: 700;
 
+    line-height: 1.2;
 }
 
 
 .brand-subtitle {
-
     color: #ffffff;
 
     font-size: 11px;
 
-    margin-top: 3px;
+    margin-top: 4px;
 
+    line-height: 1.4;
 }
 
 
-/* =========================
+/* =====================================================
    SEARCH
-========================= */
+===================================================== */
 
 .search-area {
-
     padding: 14px 14px 8px;
-
 }
 
 
 .search-box {
+    width: 100%;
 
     height: 44px;
-
-    border: 1px solid #d5e1df;
-
-    border-radius: 10px;
 
     display: flex;
 
@@ -131,54 +118,67 @@ body {
 
     background: #ffffff;
 
+    border: 1px solid #d5e1df;
+
+    border-radius: 10px;
 }
 
 
 .search-icon {
-
     color: #079e91;
 
-    font-size: 22px;
+    font-size: 18px;
 
     margin-right: 8px;
 
+    flex-shrink: 0;
 }
 
 
 .search-box input {
-
     width: 100%;
+
+    height: 100%;
 
     border: 0;
 
     outline: none;
 
+    background: transparent;
+
     font-size: 14px;
 
+    color: #222;
+}
+
+
+.search-box input::placeholder {
+    color: #999;
 }
 
 
 .clear-btn {
-
     display: none;
 
     border: 0;
 
-    background: none;
-
-    font-size: 20px;
+    background: transparent;
 
     color: #999;
 
+    font-size: 20px;
+
+    cursor: pointer;
+
+    padding: 0 4px;
 }
 
 
-/* =========================
+/* =====================================================
    TOOLBAR
-========================= */
+===================================================== */
 
 .toolbar {
-
     display: flex;
 
     align-items: center;
@@ -188,17 +188,15 @@ body {
     padding: 2px 14px 12px;
 
     border-bottom: 1px solid #e5e5e5;
-
 }
 
 
 .filter-btn {
-
     border: 0;
 
     background: #08a99b;
 
-    color: white;
+    color: #ffffff;
 
     border-radius: 8px;
 
@@ -210,49 +208,57 @@ body {
 
     cursor: pointer;
 
+    transition:
+        background 0.2s ease,
+        transform 0.1s ease;
+}
+
+
+.filter-btn:hover {
+    background: #078f84;
+}
+
+
+.filter-btn:active {
+    transform: scale(0.97);
 }
 
 
 .counter {
-
     font-size: 13px;
 
     color: #666;
-
 }
 
 
 .counter strong {
-
     color: #079e91;
 
+    font-weight: 700;
 }
 
 
-/* =========================
+/* =====================================================
    CONTENT
-========================= */
+===================================================== */
 
 .content {
-
-    padding: 12px 14px;
-
+    padding: 12px 14px 30px;
 }
 
 
 .list-title {
-
     font-size: 17px;
 
     font-weight: 700;
 
-    margin-bottom: 8px;
+    color: #222;
 
+    margin-bottom: 6px;
 }
 
 
 .loading {
-
     font-size: 12px;
 
     font-weight: normal;
@@ -261,14 +267,25 @@ body {
 
     margin-top: 4px;
 
+    margin-bottom: 10px;
 }
 
 
-/* =========================
+/* =====================================================
+   LOCATION LIST
+===================================================== */
+
+.location-list {
+    width: 100%;
+}
+
+
+/* =====================================================
    LOCATION CARD
-========================= */
+===================================================== */
 
 .location-card {
+    width: 100%;
 
     border: 1px solid #e1e5e4;
 
@@ -278,35 +295,53 @@ body {
 
     margin-bottom: 10px;
 
-    background: white;
+    background: #ffffff;
 
+    transition:
+        box-shadow 0.2s ease,
+        transform 0.1s ease;
 }
 
 
+.location-card:hover {
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+
+/* =====================================================
+   LOCATION NAME
+===================================================== */
+
 .location-name {
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 7px;
 
     font-size: 15px;
 
     font-weight: 700;
 
-    display: flex;
+    line-height: 1.35;
 
-    gap: 7px;
-
-    align-items: flex-start;
-
+    color: #222;
 }
 
 
 .pin {
-
     color: #e72b65;
 
+    flex-shrink: 0;
 }
 
 
-.location-address {
+/* =====================================================
+   LOCATION ADDRESS
+===================================================== */
 
+.location-address {
     margin-top: 7px;
 
     font-size: 12px;
@@ -314,12 +349,14 @@ body {
     line-height: 1.5;
 
     color: #777;
-
 }
 
 
-.location-type {
+/* =====================================================
+   LOCATION TYPE
+===================================================== */
 
+.location-type {
     display: inline-block;
 
     margin-top: 7px;
@@ -334,27 +371,31 @@ body {
 
     font-size: 10px;
 
+    line-height: 1.2;
 }
 
 
-.location-footer {
+/* =====================================================
+   LOCATION FOOTER
+===================================================== */
 
+.location-footer {
     display: flex;
 
     justify-content: flex-end;
 
     margin-top: 10px;
-
 }
 
 
 .location-footer a {
+    display: inline-block;
 
     text-decoration: none;
 
     background: #0878d1;
 
-    color: white;
+    color: #ffffff;
 
     padding: 8px 12px;
 
@@ -364,20 +405,50 @@ body {
 
     font-weight: 600;
 
+    transition:
+        background 0.2s ease,
+        transform 0.1s ease;
 }
 
 
-/* =========================
+.location-footer a:hover {
+    background: #0669b8;
+}
+
+
+.location-footer a:active {
+    transform: scale(0.97);
+}
+
+
+/* =====================================================
+   EMPTY
+===================================================== */
+
+.empty {
+    text-align: center;
+
+    color: #999;
+
+    font-size: 13px;
+
+    padding: 40px 10px;
+}
+
+
+/* =====================================================
    FILTER MODAL
-========================= */
+===================================================== */
 
 .filter-modal {
-
     position: fixed;
 
     inset: 0;
 
-    background: rgba(0,0,0,.35);
+    width: 100%;
+    height: 100%;
+
+    background: rgba(0, 0, 0, 0.35);
 
     z-index: 1000;
 
@@ -386,160 +457,324 @@ body {
     align-items: flex-end;
 
     justify-content: center;
-
 }
 
 
-.filter-box {
+/*
+   Penting:
+   JS kita menggunakan .hidden
+*/
 
+.filter-modal[hidden] {
+    display: none !important;
+}
+
+
+/* =====================================================
+   FILTER BOX
+===================================================== */
+
+.filter-box {
     width: 100%;
 
     max-width: 430px;
 
-    background: white;
+    background: #ffffff;
 
     border-radius: 18px 18px 0 0;
 
     padding: 18px;
 
+    box-shadow:
+        0 -3px 15px rgba(0, 0, 0, 0.10);
 }
 
 
-.filter-header {
+/* =====================================================
+   FILTER HEADER
+===================================================== */
 
+.filter-header {
     display: flex;
 
-    justify-content: space-between;
-
     align-items: center;
+
+    justify-content: space-between;
 
     margin-bottom: 15px;
 
     font-size: 17px;
 
+    color: #222;
 }
 
 
 .filter-header button {
-
     border: 0;
 
-    background: none;
+    background: transparent;
+
+    color: #555;
 
     font-size: 22px;
 
+    line-height: 1;
+
+    cursor: pointer;
+
+    padding: 2px 5px;
 }
 
 
-.filter-box select {
+/* =====================================================
+   FILTER SELECT
+===================================================== */
 
+.filter-box select {
     width: 100%;
 
     height: 42px;
 
     margin-bottom: 10px;
 
-    border: 1px solid #ddd;
+    padding: 0 10px;
+
+    border: 1px solid #dddddd;
 
     border-radius: 8px;
 
-    padding: 0 10px;
+    background: #ffffff;
 
-    background: white;
+    color: #333;
 
+    font-size: 13px;
+
+    outline: none;
 }
 
 
-.filter-actions {
+.filter-box select:focus {
+    border-color: #08a99b;
+}
 
+
+/* =====================================================
+   FILTER ACTIONS
+===================================================== */
+
+.filter-actions {
     display: flex;
 
     gap: 8px;
 
     margin-top: 5px;
-
 }
 
 
 .reset-btn,
 .apply-btn {
-
     flex: 1;
 
     height: 42px;
 
+    border: 0;
+
     border-radius: 8px;
 
-    border: 0;
+    font-size: 13px;
 
     font-weight: 600;
 
+    cursor: pointer;
 }
 
 
-.reset-btn {
+/* RESET */
 
+.reset-btn {
     background: #eeeeee;
 
     color: #555;
-
 }
 
+
+.reset-btn:hover {
+    background: #e2e2e2;
+}
+
+
+/* APPLY */
 
 .apply-btn {
-
     background: #08a99b;
 
-    color: white;
+    color: #ffffff;
+}
+
+
+.apply-btn:hover {
+    background: #078f84;
+}
+
+
+/* =====================================================
+   GENERAL HIDDEN
+===================================================== */
+
+[hidden] {
+    display: none !important;
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 600px) {
+
+    body {
+        background: #ffffff;
+    }
+
+
+    .app {
+        width: 100%;
+
+        max-width: 430px;
+
+        min-height: 100vh;
+
+        margin: 0 auto;
+    }
+
+
+    .header {
+        padding: 16px 14px;
+    }
+
+
+    .brand-title {
+        font-size: 20px;
+    }
+
+
+    .brand-subtitle {
+        font-size: 11px;
+    }
+
+
+    .search-area {
+        padding: 14px 14px 8px;
+    }
+
+
+    .toolbar {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+
+    .content {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
 
 }
 
 
-/* =========================
-   EMPTY
-========================= */
+/* =====================================================
+   SMALL PHONE
+===================================================== */
 
-.empty {
+@media (max-width: 360px) {
 
-    text-align: center;
+    .brand-title {
+        font-size: 18px;
+    }
 
-    color: #999;
 
-    padding: 40px 10px;
+    .brand-subtitle {
+        font-size: 10px;
+    }
+
+
+    .filter-btn {
+        padding: 9px 14px;
+
+        font-size: 13px;
+    }
+
+
+    .counter {
+        font-size: 12px;
+    }
+
+
+    .location-card {
+        padding: 12px;
+    }
+
+
+    .location-name {
+        font-size: 14px;
+    }
+
+
+    .location-address {
+        font-size: 11px;
+    }
 
 }
 
 
-/* =========================
+/* =====================================================
    DESKTOP
-========================= */
+===================================================== */
 
 @media (min-width: 700px) {
 
-    .app {
+    body {
+        padding: 20px;
 
+        background: #eef5f3;
+    }
+
+
+    .app {
         max-width: 700px;
 
-        margin-top: 20px;
-
         min-height: auto;
+
+        margin: 0 auto;
 
         border-radius: 12px;
 
         overflow: hidden;
 
         box-shadow:
-            0 2px 15px rgba(0,0,0,.08);
-
+            0 2px 15px rgba(0, 0, 0, 0.08);
     }
 
-}
+
+    .header {
+        padding: 18px;
+    }
 
 
-/* =========================
-   HIDDEN
-========================= */
+    .content {
+        padding: 16px 18px 30px;
+    }
 
-[hidden] {
-    display: none !important;
+
+    .search-area {
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+
+
+    .toolbar {
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+
 }
