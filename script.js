@@ -82,69 +82,60 @@ document.addEventListener(
 
 function loadData() {
 
-    fetch(API_URL)
+    const url =
+        "https://docs.google.com/spreadsheets/d/" +
+        SHEET_ID +
+        "/gviz/tq?tqx=out:csv&gid=" +
+        GID;
+
+    fetch(url)
 
         .then(function(response) {
 
             if (!response.ok) {
-
                 throw new Error(
-                    "API tidak dapat diakses"
+                    "Google Sheet tidak dapat diakses"
                 );
-
             }
 
-            return response.json();
+            return response.text();
 
         })
 
+        .then(function(csv) {
 
-        .then(function(data) {
+            console.log("Google Sheet berhasil dibaca");
 
-            console.log(
-                "Data lokasi:",
-                data
-            );
+            allLocations = parseCSV(csv);
 
-
-            allLocations = data;
-
-            activeLocations = data;
-
+            activeLocations = allLocations;
 
             buildFilters();
 
+            renderList(activeLocations);
 
-            renderList(
-                activeLocations
-            );
-
-
-            document.getElementById(
-                "loading"
-            ).style.display = "none";
-
+            document.getElementById("loading")
+                .style.display = "none";
 
         })
-
 
         .catch(function(error) {
 
             console.error(
-                "ERROR:",
+                "ERROR LOAD DATA:",
                 error
             );
 
-
-            document.getElementById(
-                "loading"
-            ).innerHTML =
-                "❌ Data lokasi tidak dapat dimuat.";
+            document.getElementById("loading")
+                .innerHTML =
+                "❌ Data lokasi tidak dapat dimuat.<br>" +
+                "<small>" +
+                error.message +
+                "</small>";
 
         });
 
 }
-
 
 /* ==============================
    RENDER LIST
