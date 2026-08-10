@@ -1,6 +1,3 @@
-const SHEET_ID = "1AxSU0mkLd6sUVfPxYwVYlKyuN2Hc8d8q-k00D-UYrLQ";
-const GID = "0";
-
 let allLocations = [];
 let activeLocations = [];
 
@@ -49,20 +46,28 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 /* ==============================
-   LOAD GOOGLE SHEET
+   LOAD CSV
 ============================== */
 
 function loadData() {
 
-    const url = "./locations.csv";
+    console.log("Mulai mengambil locations.csv...");
 
-    fetch(url)
+    fetch("./locations.csv")
         .then(function(response) {
 
+            console.log(
+                "Status locations.csv:",
+                response.status
+            );
+
             if (!response.ok) {
+
                 throw new Error(
-                    "File locations.csv tidak ditemukan"
+                    "locations.csv tidak ditemukan. Status: " +
+                    response.status
                 );
+
             }
 
             return response.text();
@@ -71,18 +76,34 @@ function loadData() {
 
         .then(function(csv) {
 
-            console.log("CSV berhasil dibaca");
+            console.log("CSV berhasil dibaca.");
+
+            console.log(
+                "Jumlah karakter CSV:",
+                csv.length
+            );
 
             allLocations = parseCSV(csv);
 
-            activeLocations = allLocations;
+            console.log(
+                "Jumlah lokasi:",
+                allLocations.length
+            );
+
+            activeLocations = [...allLocations];
 
             buildFilters();
 
             renderList(activeLocations);
 
-            document.getElementById("loading")
-                .style.display = "none";
+            const loading =
+                document.getElementById("loading");
+
+            if (loading) {
+
+                loading.style.display = "none";
+
+            }
 
         })
 
@@ -93,12 +114,18 @@ function loadData() {
                 error
             );
 
-            document.getElementById("loading")
-                .innerHTML =
-                "❌ Data lokasi tidak dapat dimuat.<br>" +
-                "<small>" +
-                error.message +
-                "</small>";
+            const loading =
+                document.getElementById("loading");
+
+            if (loading) {
+
+                loading.innerHTML =
+                    "❌ Data lokasi tidak dapat dimuat.<br>" +
+                    "<small>" +
+                    error.message +
+                    "</small>";
+
+            }
 
         });
 
@@ -119,7 +146,11 @@ function parseCSV(csv) {
     let insideQuotes = false;
 
 
-    for (let i = 0; i < csv.length; i++) {
+    for (
+        let i = 0;
+        i < csv.length;
+        i++
+    ) {
 
         const char = csv[i];
         const nextChar = csv[i + 1];
@@ -129,7 +160,10 @@ function parseCSV(csv) {
 
         if (char === '"') {
 
-            if (insideQuotes && nextChar === '"') {
+            if (
+                insideQuotes &&
+                nextChar === '"'
+            ) {
 
                 value += '"';
 
@@ -137,7 +171,8 @@ function parseCSV(csv) {
 
             } else {
 
-                insideQuotes = !insideQuotes;
+                insideQuotes =
+                    !insideQuotes;
 
             }
 
@@ -148,7 +183,10 @@ function parseCSV(csv) {
 
         /* COMMA */
 
-        if (char === "," && !insideQuotes) {
+        if (
+            char === "," &&
+            !insideQuotes
+        ) {
 
             row.push(value);
 
@@ -162,12 +200,18 @@ function parseCSV(csv) {
         /* NEW LINE */
 
         if (
-            (char === "\n" || char === "\r") &&
+            (char === "\n" ||
+             char === "\r") &&
             !insideQuotes
         ) {
 
-            if (char === "\r" && nextChar === "\n") {
+            if (
+                char === "\r" &&
+                nextChar === "\n"
+            ) {
+
                 i++;
+
             }
 
             row.push(value);
@@ -175,7 +219,9 @@ function parseCSV(csv) {
             value = "";
 
             if (row.length > 0) {
+
                 rows.push(row);
+
             }
 
             row = [];
@@ -192,7 +238,10 @@ function parseCSV(csv) {
 
     /* LAST ROW */
 
-    if (value !== "" || row.length > 0) {
+    if (
+        value !== "" ||
+        row.length > 0
+    ) {
 
         row.push(value);
 
@@ -202,6 +251,10 @@ function parseCSV(csv) {
 
 
     if (rows.length <= 1) {
+
+        console.error(
+            "CSV tidak memiliki data."
+        );
 
         return [];
 
@@ -213,29 +266,52 @@ function parseCSV(csv) {
 
     /* SKIP HEADER */
 
-    for (let i = 1; i < rows.length; i++) {
+    for (
+        let i = 1;
+        i < rows.length;
+        i++
+    ) {
 
         const row = rows[i];
 
 
         const wkt =
-            String(row[0] || "").trim();
+            String(
+                row[0] || ""
+            ).trim();
+
 
         const name =
-            String(row[1] || "").trim();
+            String(
+                row[1] || ""
+            ).trim();
+
 
         const provinsi =
-            String(row[2] || "").trim();
+            String(
+                row[2] || ""
+            ).trim();
+
 
         const kota =
-            String(row[3] || "").trim();
+            String(
+                row[3] || ""
+            ).trim();
+
 
         const kecamatan =
-            String(row[4] || "").trim();
+            String(
+                row[4] || ""
+            ).trim();
+
 
         const tipe =
-            String(row[5] || "").trim();
+            String(
+                row[5] || ""
+            ).trim();
 
+
+        /* SKIP BARIS TANPA NAMA */
 
         if (!name) {
 
@@ -249,14 +325,12 @@ function parseCSV(csv) {
 
 
         /*
+            FORMAT WKT:
 
-           FORMAT:
+            POINT (97.96694860 2.391343370)
 
-           POINT (97.96694860 2.391343370)
-
-           lng = 97.96694860
-           lat = 2.391343370
-
+            lng = 97.96694860
+            lat = 2.391343370
         */
 
         const match =
@@ -267,9 +341,15 @@ function parseCSV(csv) {
 
         if (match) {
 
-            lng = parseFloat(match[1]);
+            lng =
+                parseFloat(
+                    match[1]
+                );
 
-            lat = parseFloat(match[2]);
+            lat =
+                parseFloat(
+                    match[2]
+                );
 
         }
 
@@ -313,19 +393,27 @@ function parseCSV(csv) {
 function renderList(data) {
 
     const list =
-        document.getElementById("list");
+        document.getElementById(
+            "list"
+        );
+
 
     const total =
-        document.getElementById("total");
+        document.getElementById(
+            "total"
+        );
+
 
     const empty =
-        document.getElementById("empty");
+        document.getElementById(
+            "empty"
+        );
 
 
     if (!list) {
 
         console.error(
-            "Element #list tidak ditemukan"
+            "Element #list tidak ditemukan."
         );
 
         return;
@@ -347,7 +435,9 @@ function renderList(data) {
     if (data.length === 0) {
 
         if (empty) {
+
             empty.hidden = false;
+
         }
 
         return;
@@ -356,84 +446,88 @@ function renderList(data) {
 
 
     if (empty) {
+
         empty.hidden = true;
+
     }
 
 
-    data.forEach(function(item) {
+    data.forEach(
+        function(item) {
 
-        const card =
-            document.createElement("div");
-
-
-        card.className =
-            "location-card";
-
-
-        card.innerHTML = `
-
-            <div class="location-name">
-
-                <span class="pin">
-                    📍
-                </span>
-
-                <span>
-                    ${escapeHTML(item.name)}
-                </span>
-
-            </div>
+            const card =
+                document.createElement(
+                    "div"
+                );
 
 
-            <div class="location-address">
-
-                ${escapeHTML(item.kecamatan)}
-
-                <br>
-
-                ${escapeHTML(item.kota)}
-
-                <br>
-
-                ${escapeHTML(item.provinsi)}
-
-            </div>
+            card.className =
+                "location-card";
 
 
-            ${
-                item.tipe
-                ?
-                `
-                <div class="location-type">
+            card.innerHTML = `
 
-                    ${escapeHTML(item.tipe)}
+                <div class="location-name">
+
+                    <span class="pin">
+                        📍
+                    </span>
+
+                    <span>
+                        ${escapeHTML(item.name)}
+                    </span>
 
                 </div>
-                `
-                :
-                ""
-            }
 
 
-            <div class="location-footer">
+                <div class="location-address">
 
-                <a
-                    href="${item.url}"
-                    target="_blank"
-                    rel="noopener noreferrer">
+                    ${escapeHTML(item.kecamatan)}
+                    <br>
 
-                    Lihat Lokasi →
+                    ${escapeHTML(item.kota)}
+                    <br>
 
-                </a>
+                    ${escapeHTML(item.provinsi)}
 
-            </div>
-
-        `;
+                </div>
 
 
-        list.appendChild(card);
+                ${
+                    item.tipe
+                    ?
+                    `
+                    <div class="location-type">
 
-    });
+                        ${escapeHTML(item.tipe)}
+
+                    </div>
+                    `
+                    :
+                    ""
+                }
+
+
+                <div class="location-footer">
+
+                    <a
+                        href="${item.url}"
+                        target="_blank"
+                        rel="noopener noreferrer">
+
+                        Lihat Lokasi →
+
+                    </a>
+
+                </div>
+
+            `;
+
+
+            list.appendChild(card);
+
+        }
+    );
 
 }
 
@@ -445,10 +539,15 @@ function renderList(data) {
 function searchLocation() {
 
     const searchElement =
-        document.getElementById("search");
+        document.getElementById(
+            "search"
+        );
+
 
     if (!searchElement) {
+
         return;
+
     }
 
 
@@ -560,21 +659,19 @@ function buildFilters() {
 function unique(key) {
 
     return [
-
         ...new Set(
 
             allLocations
+                .map(
+                    function(item) {
 
-                .map(function(item) {
+                        return item[key];
 
-                    return item[key];
-
-                })
-
+                    }
+                )
                 .filter(Boolean)
 
         )
-
     ].sort();
 
 }
@@ -584,7 +681,10 @@ function unique(key) {
    FILL SELECT
 ============================== */
 
-function fillSelect(id, values) {
+function fillSelect(
+    id,
+    values
+) {
 
     const select =
         document.getElementById(id);
@@ -593,8 +693,9 @@ function fillSelect(id, values) {
     if (!select) {
 
         console.error(
-            "Select #" + id +
-            " tidak ditemukan"
+            "Select #" +
+            id +
+            " tidak ditemukan."
         );
 
         return;
@@ -602,27 +703,29 @@ function fillSelect(id, values) {
     }
 
 
-    values.forEach(function(value) {
+    values.forEach(
+        function(value) {
 
-        const option =
-            document.createElement(
-                "option"
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+
+            option.value =
+                value;
+
+
+            option.textContent =
+                value;
+
+
+            select.appendChild(
+                option
             );
 
-
-        option.value =
-            value;
-
-
-        option.textContent =
-            value;
-
-
-        select.appendChild(
-            option
-        );
-
-    });
+        }
+    );
 
 }
 
@@ -663,23 +766,31 @@ function applyFilterData() {
 
                 return (
 
-                    (!provinsi ||
-                     item.provinsi === provinsi)
+                    (
+                        !provinsi ||
+                        item.provinsi === provinsi
+                    )
 
                     &&
 
-                    (!kota ||
-                     item.kota === kota)
+                    (
+                        !kota ||
+                        item.kota === kota
+                    )
 
                     &&
 
-                    (!kecamatan ||
-                     item.kecamatan === kecamatan)
+                    (
+                        !kecamatan ||
+                        item.kecamatan === kecamatan
+                    )
 
                     &&
 
-                    (!tipe ||
-                     item.tipe === tipe)
+                    (
+                        !tipe ||
+                        item.tipe === tipe
+                    )
 
                 );
 
@@ -735,7 +846,7 @@ function resetFilterData() {
 
 
 /* ==============================
-   FILTER MODAL
+   OPEN FILTER
 ============================== */
 
 function openFilter() {
@@ -754,6 +865,10 @@ function openFilter() {
 
 }
 
+
+/* ==============================
+   CLOSE FILTER
+============================== */
 
 function closeFilterModal() {
 
