@@ -54,26 +54,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function loadData() {
 
-    const url =
-        "https://docs.google.com/spreadsheets/d/" +
-        SHEET_ID +
-        "/gviz/tq?tqx=out:csv&gid=" +
-        GID;
-
-    console.log("Mengambil data dari:");
-    console.log(url);
+    const url = "./locations.csv";
 
     fetch(url)
-
         .then(function(response) {
 
             if (!response.ok) {
-
                 throw new Error(
-                    "Google Sheet tidak dapat diakses. Status: " +
-                    response.status
+                    "File locations.csv tidak ditemukan"
                 );
-
             }
 
             return response.text();
@@ -82,29 +71,18 @@ function loadData() {
 
         .then(function(csv) {
 
-            console.log("Google Sheet berhasil dibaca");
-
-            console.log("Jumlah karakter CSV:", csv.length);
+            console.log("CSV berhasil dibaca");
 
             allLocations = parseCSV(csv);
 
-            console.log(
-                "Jumlah lokasi:",
-                allLocations.length
-            );
-
-            activeLocations = [...allLocations];
+            activeLocations = allLocations;
 
             buildFilters();
 
             renderList(activeLocations);
 
-            const loading =
-                document.getElementById("loading");
-
-            if (loading) {
-                loading.style.display = "none";
-            }
+            document.getElementById("loading")
+                .style.display = "none";
 
         })
 
@@ -115,18 +93,12 @@ function loadData() {
                 error
             );
 
-            const loading =
-                document.getElementById("loading");
-
-            if (loading) {
-
-                loading.innerHTML =
-                    "❌ Data lokasi tidak dapat dimuat.<br>" +
-                    "<small>" +
-                    error.message +
-                    "</small>";
-
-            }
+            document.getElementById("loading")
+                .innerHTML =
+                "❌ Data lokasi tidak dapat dimuat.<br>" +
+                "<small>" +
+                error.message +
+                "</small>";
 
         });
 
