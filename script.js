@@ -1,9 +1,7 @@
-const API_URL =
-    "https://script.google.com/macros/s/AKfycbztHwY74MZJijuK2hy55C2xMIDx9Ix7HSfg4mUyt7eYeM87QqYtm_xphhx6c3a6ub4/exec";
-
+const SHEET_ID = "1AxSU0mkLd6sUVfPxYwVYlKyuN2Hc8d8q-k00D-UYrLQ";
+const GID = "0";
 
 let allLocations = [];
-
 let activeLocations = [];
 
 
@@ -11,73 +9,47 @@ let activeLocations = [];
    START
 ============================== */
 
-document.addEventListener(
-    "DOMContentLoaded",
-    function () {
+document.addEventListener("DOMContentLoaded", function () {
 
-        const btnFilter =
-            document.getElementById("btnFilter");
+    const btnFilter = document.getElementById("btnFilter");
+    const closeFilter = document.getElementById("closeFilter");
+    const applyFilter = document.getElementById("applyFilter");
+    const resetFilter = document.getElementById("resetFilter");
 
-        const closeFilter =
-            document.getElementById("closeFilter");
+    const search = document.getElementById("search");
+    const clearSearch = document.getElementById("clearSearch");
 
-        const applyFilter =
-            document.getElementById("applyFilter");
-
-        const resetFilter =
-            document.getElementById("resetFilter");
-
-        const search =
-            document.getElementById("search");
-
-        const clearSearch =
-            document.getElementById("clearSearch");
-
-
-        btnFilter.addEventListener(
-            "click",
-            openFilter
-        );
-
-
-        closeFilter.addEventListener(
-            "click",
-            closeFilterModal
-        );
-
-
-        applyFilter.addEventListener(
-            "click",
-            applyFilterData
-        );
-
-
-        resetFilter.addEventListener(
-            "click",
-            resetFilterData
-        );
-
-
-        search.addEventListener(
-            "input",
-            searchLocation
-        );
-
-
-        clearSearch.addEventListener(
-            "click",
-            clearSearchData
-        );
-
-
-        loadData();
-
+    if (btnFilter) {
+        btnFilter.addEventListener("click", openFilter);
     }
-);
+
+    if (closeFilter) {
+        closeFilter.addEventListener("click", closeFilterModal);
+    }
+
+    if (applyFilter) {
+        applyFilter.addEventListener("click", applyFilterData);
+    }
+
+    if (resetFilter) {
+        resetFilter.addEventListener("click", resetFilterData);
+    }
+
+    if (search) {
+        search.addEventListener("input", searchLocation);
+    }
+
+    if (clearSearch) {
+        clearSearch.addEventListener("click", clearSearchData);
+    }
+
+    loadData();
+
+});
 
 
 /* ==============================
-   LOAD DATA
+   LOAD GOOGLE SHEET
 ============================== */
 
 function loadData() {
@@ -88,14 +60,20 @@ function loadData() {
         "/gviz/tq?tqx=out:csv&gid=" +
         GID;
 
+    console.log("Mengambil data dari:");
+    console.log(url);
+
     fetch(url)
 
         .then(function(response) {
 
             if (!response.ok) {
+
                 throw new Error(
-                    "Google Sheet tidak dapat diakses"
+                    "Google Sheet tidak dapat diakses. Status: " +
+                    response.status
                 );
+
             }
 
             return response.text();
@@ -106,16 +84,27 @@ function loadData() {
 
             console.log("Google Sheet berhasil dibaca");
 
+            console.log("Jumlah karakter CSV:", csv.length);
+
             allLocations = parseCSV(csv);
 
-            activeLocations = allLocations;
+            console.log(
+                "Jumlah lokasi:",
+                allLocations.length
+            );
+
+            activeLocations = [...allLocations];
 
             buildFilters();
 
             renderList(activeLocations);
 
-            document.getElementById("loading")
-                .style.display = "none";
+            const loading =
+                document.getElementById("loading");
+
+            if (loading) {
+                loading.style.display = "none";
+            }
 
         })
 
@@ -126,16 +115,224 @@ function loadData() {
                 error
             );
 
-            document.getElementById("loading")
-                .innerHTML =
-                "❌ Data lokasi tidak dapat dimuat.<br>" +
-                "<small>" +
-                error.message +
-                "</small>";
+            const loading =
+                document.getElementById("loading");
+
+            if (loading) {
+
+                loading.innerHTML =
+                    "❌ Data lokasi tidak dapat dimuat.<br>" +
+                    "<small>" +
+                    error.message +
+                    "</small>";
+
+            }
 
         });
 
 }
+
+
+/* ==============================
+   CSV PARSER
+============================== */
+
+function parseCSV(csv) {
+
+    const rows = [];
+
+    let row = [];
+    let value = "";
+
+    let insideQuotes = false;
+
+
+    for (let i = 0; i < csv.length; i++) {
+
+        const char = csv[i];
+        const nextChar = csv[i + 1];
+
+
+        /* QUOTE */
+
+        if (char === '"') {
+
+            if (insideQuotes && nextChar === '"') {
+
+                value += '"';
+
+                i++;
+
+            } else {
+
+                insideQuotes = !insideQuotes;
+
+            }
+
+            continue;
+
+        }
+
+
+        /* COMMA */
+
+        if (char === "," && !insideQuotes) {
+
+            row.push(value);
+
+            value = "";
+
+            continue;
+
+        }
+
+
+        /* NEW LINE */
+
+        if (
+            (char === "\n" || char === "\r") &&
+            !insideQuotes
+        ) {
+
+            if (char === "\r" && nextChar === "\n") {
+                i++;
+            }
+
+            row.push(value);
+
+            value = "";
+
+            if (row.length > 0) {
+                rows.push(row);
+            }
+
+            row = [];
+
+            continue;
+
+        }
+
+
+        value += char;
+
+    }
+
+
+    /* LAST ROW */
+
+    if (value !== "" || row.length > 0) {
+
+        row.push(value);
+
+        rows.push(row);
+
+    }
+
+
+    if (rows.length <= 1) {
+
+        return [];
+
+    }
+
+
+    const result = [];
+
+
+    /* SKIP HEADER */
+
+    for (let i = 1; i < rows.length; i++) {
+
+        const row = rows[i];
+
+
+        const wkt =
+            String(row[0] || "").trim();
+
+        const name =
+            String(row[1] || "").trim();
+
+        const provinsi =
+            String(row[2] || "").trim();
+
+        const kota =
+            String(row[3] || "").trim();
+
+        const kecamatan =
+            String(row[4] || "").trim();
+
+        const tipe =
+            String(row[5] || "").trim();
+
+
+        if (!name) {
+
+            continue;
+
+        }
+
+
+        let lat = "";
+        let lng = "";
+
+
+        /*
+
+           FORMAT:
+
+           POINT (97.96694860 2.391343370)
+
+           lng = 97.96694860
+           lat = 2.391343370
+
+        */
+
+        const match =
+            wkt.match(
+                /POINT\s*\(\s*([-\d.]+)\s+([-\d.]+)\s*\)/i
+            );
+
+
+        if (match) {
+
+            lng = parseFloat(match[1]);
+
+            lat = parseFloat(match[2]);
+
+        }
+
+
+        result.push({
+
+            name: name,
+
+            provinsi: provinsi,
+
+            kota: kota,
+
+            kecamatan: kecamatan,
+
+            tipe: tipe,
+
+            lat: lat,
+
+            lng: lng,
+
+            url:
+                "https://www.google.com/maps?q=" +
+                lat +
+                "," +
+                lng
+
+        });
+
+    }
+
+
+    return result;
+
+}
+
 
 /* ==============================
    RENDER LIST
@@ -146,41 +343,55 @@ function renderList(data) {
     const list =
         document.getElementById("list");
 
-
     const total =
         document.getElementById("total");
-
 
     const empty =
         document.getElementById("empty");
 
 
-    list.innerHTML = "";
+    if (!list) {
 
-
-    total.textContent =
-        data.length;
-
-
-    if (data.length === 0) {
-
-        empty.hidden = false;
+        console.error(
+            "Element #list tidak ditemukan"
+        );
 
         return;
 
     }
 
 
-    empty.hidden = true;
+    list.innerHTML = "";
+
+
+    if (total) {
+
+        total.textContent =
+            data.length;
+
+    }
+
+
+    if (data.length === 0) {
+
+        if (empty) {
+            empty.hidden = false;
+        }
+
+        return;
+
+    }
+
+
+    if (empty) {
+        empty.hidden = true;
+    }
 
 
     data.forEach(function(item) {
 
-
         const card =
-            document.createElement(
-                "div"
-            );
+            document.createElement("div");
 
 
         card.className =
@@ -205,9 +416,11 @@ function renderList(data) {
             <div class="location-address">
 
                 ${escapeHTML(item.kecamatan)}
+
                 <br>
 
                 ${escapeHTML(item.kota)}
+
                 <br>
 
                 ${escapeHTML(item.provinsi)}
@@ -235,7 +448,7 @@ function renderList(data) {
                 <a
                     href="${item.url}"
                     target="_blank"
-                    rel="noopener">
+                    rel="noopener noreferrer">
 
                     Lihat Lokasi →
 
@@ -259,10 +472,16 @@ function renderList(data) {
 
 function searchLocation() {
 
+    const searchElement =
+        document.getElementById("search");
+
+    if (!searchElement) {
+        return;
+    }
+
+
     const keyword =
-        document
-            .getElementById("search")
-            .value
+        searchElement.value
             .toLowerCase()
             .trim();
 
@@ -273,10 +492,14 @@ function searchLocation() {
         );
 
 
-    clearButton.style.display =
-        keyword
-        ? "block"
-        : "none";
+    if (clearButton) {
+
+        clearButton.style.display =
+            keyword
+            ? "block"
+            : "none";
+
+    }
 
 
     activeLocations =
@@ -327,7 +550,7 @@ function searchLocation() {
 
 
 /* ==============================
-   FILTER
+   BUILD FILTER
 ============================== */
 
 function buildFilters() {
@@ -358,6 +581,10 @@ function buildFilters() {
 }
 
 
+/* ==============================
+   UNIQUE
+============================== */
+
 function unique(key) {
 
     return [
@@ -381,38 +608,49 @@ function unique(key) {
 }
 
 
-function fillSelect(
-    id,
-    values
-) {
+/* ==============================
+   FILL SELECT
+============================== */
+
+function fillSelect(id, values) {
 
     const select =
         document.getElementById(id);
 
 
-    values.forEach(
-        function(value) {
+    if (!select) {
 
-            const option =
-                document.createElement(
-                    "option"
-                );
+        console.error(
+            "Select #" + id +
+            " tidak ditemukan"
+        );
 
+        return;
 
-            option.value =
-                value;
-
-
-            option.textContent =
-                value;
+    }
 
 
-            select.appendChild(
-                option
+    values.forEach(function(value) {
+
+        const option =
+            document.createElement(
+                "option"
             );
 
-        }
-    );
+
+        option.value =
+            value;
+
+
+        option.textContent =
+            value;
+
+
+        select.appendChild(
+            option
+        );
+
+    });
 
 }
 
@@ -514,7 +752,7 @@ function resetFilterData() {
 
 
     activeLocations =
-        allLocations;
+        [...allLocations];
 
 
     renderList(
@@ -530,18 +768,34 @@ function resetFilterData() {
 
 function openFilter() {
 
-    document.getElementById(
-        "filterModal"
-    ).hidden = false;
+    const modal =
+        document.getElementById(
+            "filterModal"
+        );
+
+
+    if (modal) {
+
+        modal.hidden = false;
+
+    }
 
 }
 
 
 function closeFilterModal() {
 
-    document.getElementById(
-        "filterModal"
-    ).hidden = true;
+    const modal =
+        document.getElementById(
+            "filterModal"
+        );
+
+
+    if (modal) {
+
+        modal.hidden = true;
+
+    }
 
 }
 
@@ -552,18 +806,35 @@ function closeFilterModal() {
 
 function clearSearchData() {
 
-    document.getElementById(
-        "search"
-    ).value = "";
+    const search =
+        document.getElementById(
+            "search"
+        );
 
 
-    document.getElementById(
-        "clearSearch"
-    ).style.display = "none";
+    if (search) {
+
+        search.value = "";
+
+    }
+
+
+    const clearButton =
+        document.getElementById(
+            "clearSearch"
+        );
+
+
+    if (clearButton) {
+
+        clearButton.style.display =
+            "none";
+
+    }
 
 
     activeLocations =
-        allLocations;
+        [...allLocations];
 
 
     renderList(
