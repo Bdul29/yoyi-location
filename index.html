@@ -1,141 +1,105 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="id">
 <head>
-
-  <base target="_top">
-
   <meta charset="UTF-8">
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>YOYI! Location</title>
-
-  <?!= include("CSS"); ?>
-
+  <title>YOYI! LOCATION</title>
+  <meta name="description" content="YOYI! Location - Smart Locker & Storage Network">
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<div class="container">
+  <main class="app">
 
-    <!-- HEADER -->
-
-    <div class="header">
-
-        <h1>🟨 YOYI! LOCATION</h1>
-
-        <p>Smart Locker & Storage Network</p>
-
-    </div>
-
-    <!-- SEARCH -->
-
-    <div class="search-box">
-
-        <input
-            type="text"
-            id="search"
-            placeholder="Cari lokasi...">
-
-        <button id="btnSearch">🔍</button>
-
-    </div>
-
-    <!-- TOOLBAR -->
-
-    <div class="toolbar">
-
-        <button id="btnFilter">
-
-            ⚙ Filter
-
-        </button>
-
-        <div class="counter">
-
-            <span id="total">0</span> Lokasi
-
+    <header class="header">
+      <div class="brand">
+        <div class="brand-mark">Y</div>
+        <div>
+          <h1>YOYI! LOCATION</h1>
+          <p>Smart Locker &amp; Storage Network</p>
         </div>
+      </div>
+    </header>
 
-    </div>
+    <section class="toolbar">
+      <div class="search-wrap">
+        <span class="search-icon">⌕</span>
+        <input id="searchInput" type="search" placeholder="Cari lokasi..." autocomplete="off">
+        <button id="clearSearch" class="clear-btn" type="button" aria-label="Hapus pencarian">×</button>
+      </div>
 
-    <!-- FILTER -->
+      <button id="filterBtn" class="filter-btn" type="button">
+        <span>⚙</span> Filter
+      </button>
 
-    <div id="filterModal" class="modal">
+      <div class="counter"><strong id="totalCount">0</strong> Lokasi</div>
+    </section>
 
-        <div class="modal-content">
-
-            <h3>Filter Lokasi</h3>
-
-            <select id="provinsi">
-
-                <option value="">Semua Provinsi</option>
-
-            </select>
-
-            <select id="kota">
-
-                <option value="">Semua Kota</option>
-
-            </select>
-
-            <select id="kecamatan">
-
-                <option value="">Semua Kecamatan</option>
-
-            </select>
-
-            <select id="tipe">
-
-                <option value="">Semua Tipe</option>
-
-            </select>
-
-            <div class="button-group">
-
-                <button id="applyFilter">
-
-                    Terapkan
-
-                </button>
-
-                <button id="resetFilter">
-
-                    Reset
-
-                </button>
-
-                <button id="closeFilter">
-
-                    Tutup
-
-                </button>
-
-            </div>
-
+    <section class="content">
+      <div class="list-header">
+        <div>
+          <h2>Daftar Lokasi</h2>
+          <p id="resultInfo">Mengambil data...</p>
         </div>
+      </div>
 
-    </div>
+      <div id="loading" class="state">Mengambil data lokasi...</div>
+      <div id="error" class="state error" hidden></div>
+      <div id="empty" class="state" hidden>Lokasi tidak ditemukan.</div>
+      <div id="locationList" class="location-list"></div>
+    </section>
 
-    <!-- LIST -->
+  </main>
 
-    <div class="list-container">
-
-        <div id="loading">
-
-            Mengambil data...
-
+  <!-- FILTER MODAL -->
+  <div id="filterModal" class="modal" hidden>
+    <div class="modal-backdrop" id="modalBackdrop"></div>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="filterTitle">
+      <div class="modal-head">
+        <div>
+          <h2 id="filterTitle">Filter Lokasi</h2>
+          <p>Pilih kriteria lokasi yang ingin ditampilkan.</p>
         </div>
+        <button id="closeFilter" class="close-btn" type="button" aria-label="Tutup">×</button>
+      </div>
 
-        <div id="list"></div>
+      <div class="filter-grid">
+        <label>
+          <span>Provinsi</span>
+          <select id="provinsi">
+            <option value="">Semua Provinsi</option>
+          </select>
+        </label>
 
+        <label>
+          <span>Kota</span>
+          <select id="kota">
+            <option value="">Semua Kota</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Kecamatan</span>
+          <select id="kecamatan">
+            <option value="">Semua Kecamatan</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Tipe</span>
+          <select id="tipe">
+            <option value="">Semua Tipe</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="modal-actions">
+        <button id="resetFilter" class="btn-secondary" type="button">Reset</button>
+        <button id="applyFilter" class="btn-primary" type="button">Terapkan Filter</button>
+      </div>
     </div>
+  </div>
 
-</div>
-
-<?!= include("JS"); ?>
-
+  <script src="script.js"></script>
 </body>
-
 </html>
