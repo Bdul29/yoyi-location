@@ -1,0 +1,1 @@
+document.querySelectorAll('a[href]').forEach(function(a){a.addEventListener('click',function(){document.body.classList.add('navigating')})});
