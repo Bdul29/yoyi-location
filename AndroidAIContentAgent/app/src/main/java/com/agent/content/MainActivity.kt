@@ -72,7 +72,7 @@ class MainActivity : Activity() {
             openUrl("https://aistudio.google.com/apikey")
         })
         modelInput = EditText(this).apply {
-            setText("gemini-3.8-flash")
+            setText("gemini-3.6-flash")
             hint = "Model Gemini"
             singleLine = true
         }
@@ -130,7 +130,7 @@ class MainActivity : Activity() {
                 toast("Simpan Gemini API key terlebih dahulu.")
                 return@makeButton
             }
-            val model = modelInput.text.toString().trim().ifBlank { "gemini-3.8-flash" }
+            val model = modelInput.text.toString().trim().ifBlank { "gemini-3.6-flash" }
             val duration = when (durationSpinner.selectedItemPosition) {
                 0 -> 30
                 2 -> 60
