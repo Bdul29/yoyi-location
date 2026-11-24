@@ -3,7 +3,7 @@
 Aplikasi Android untuk ide, naskah voice-over, storyboard, caption, hashtag, dan brief Canva Free untuk TikTok, Reels, dan YouTube Shorts.
 
 - Android compileSdk/targetSdk 37 (Android 17), minSdk 24
-- Gemini Developer API dengan model gemini-3.8-flash
+- Gemini Developer API dengan model gemini-3.6-flash
 - API key dimasukkan langsung di aplikasi dan dienkripsi dengan Android Keystore
 - GitHub Actions membangun APK debug
 
