@@ -1,0 +1,46 @@
+name: Build AI Content Agent APK
+
+on:
+  push:
+    branches:
+      - android-ai-agent-build
+    paths:
+      - "AndroidAIContentAgent/**"
+      - ".github/workflows/build-ai-content-agent.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build Android 17 debug APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+      - name: Accept licenses and install Android 17 SDK
+        run: |
+          yes | sdkmanager --licenses >/dev/null 2>&1 || true
+          sdkmanager "platform-tools" "platforms;android-37" "build-tools;36.0.0"
+      - name: Set up Gradle 9.5
+        uses: gradle/actions/setup-gradle@v6
+        with:
+          gradle-version: "9.5.0"
+      - name: Build debug APK
+        run: gradle --no-daemon --stacktrace -p AndroidAIContentAgent :app:assembleDebug
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: AI-Content-Agent-APK
+          path: AndroidAIContentAgent/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 14
