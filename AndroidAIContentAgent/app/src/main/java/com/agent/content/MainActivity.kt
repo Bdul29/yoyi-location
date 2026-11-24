@@ -1,6 +1,5 @@
 package com.agent.content
 
-import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Intent
@@ -16,10 +15,11 @@ import android.widget.ScrollView
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.ComponentActivity
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 
-class MainActivity : Activity() {
+class MainActivity : ComponentActivity() {
     private lateinit var secrets: SecretStore
     private val gemini = GeminiClient()
     private val contentAgent = ContentAgent()
@@ -65,7 +65,6 @@ class MainActivity : Activity() {
         keyInput = EditText(this).apply {
             hint = "Tempel Gemini API key"
             inputType = 129
-            singleLine = true
         }
         content.addView(keyInput)
         content.addView(makeButton("Buka Google AI Studio") {
@@ -74,7 +73,6 @@ class MainActivity : Activity() {
         modelInput = EditText(this).apply {
             setText("gemini-3.6-flash")
             hint = "Model Gemini"
-            singleLine = true
         }
         content.addView(modelInput)
         content.addView(makeButton("Simpan API Key di HP") { saveKey() })
@@ -147,7 +145,7 @@ class MainActivity : Activity() {
                     output.text = lastOutput
                     status.text = "Selesai. Periksa fakta sebelum dipakai."
                 } catch (error: Exception) {
-                    status.text = "Gagal: \${error.message ?: "Terjadi kesalahan."}"
+                    status.text = "Gagal: ${error.message ?: "Terjadi kesalahan."}"
                 }
             }
         })
@@ -206,7 +204,7 @@ class MainActivity : Activity() {
             refreshStatus()
             toast("API key tersimpan terenkripsi di HP.")
         } catch (error: Exception) {
-            toast("Tidak bisa menyimpan API key: \${error.message}")
+            toast("Tidak bisa menyimpan API key: ${error.message}")
         }
     }
 
